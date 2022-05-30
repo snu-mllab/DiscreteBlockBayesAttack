@@ -44,9 +44,9 @@ import numpy as np
 import torch
 import random
 
-from attack_codes.BayesOpt.acquisition.algorithm import kmeans_pp, acquisition_maximization_with_indices
-from attack_codes.BayesOpt.historyboard import HistoryBoardProtein
-from attack_codes.BayesOpt.surrogate_model.gp_model import MyGPModel
+from attack_codes.bayesopt.acquisition.algorithm import kmeans_pp, acquisition_maximization_with_indices
+from attack_codes.bayesopt.historyboard import HistoryBoardProtein
+from attack_codes.bayesopt.surrogate_model.gp_model import MyGPModel
 
 import copy
 import time
