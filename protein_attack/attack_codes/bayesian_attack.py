@@ -75,7 +75,6 @@ class BayesAttack:
         self.print_option = print_option
 
         self.use_sod = True
-        self.reg_coef = 0.0
         self.batch_size = 4
         self.memory_count = 0
 
@@ -177,7 +176,7 @@ class BayesAttack:
                 inds = self.HISTORY_DICT[key]
                 loc_fix_indices = list( set(list(range(eff_len))) - set(deepcopy(self.INDEX_DICT[key])) )
                 if loc_fix_indices:
-                    history = self.hb.eval_X_num[inds]
+                    history = self.hb.eval_X_reduced[inds]
                     uniq = torch.unique(history[:,loc_fix_indices],dim=0)
                     assert uniq.shape[0] == 1, f'{uniq.shape},{uniq[:,:5]}'
 
@@ -205,12 +204,12 @@ class BayesAttack:
                         break
                 best_val = self.hb.eval_Y[best_inds[0]][0].item()
                 best_seq = self.hb.eval_X[best_ind].view(1,-1)
-                reference = best_val - self.reg_coef * torch.count_nonzero(self.hb.eval_X_num[best_inds[0]])
+                reference = best_val
                 #print(f"best of current KEY {KEY} :", best_val, self.hb._hamming(self.orig_X, best_seq))
                 best_indiced = self.hb.numbering_seqs(best_seq)
                 
                 best_seqs = self.find_greedy_init_with_indices(cand_indices=best_indiced, max_radius=eff_len, num_candids=num_candids, reference=reference)
-                best_candidates = acquisition_maximization_with_indices(best_seqs, opt_indices=opt_indices, batch_size=self.batch_size, stage=eff_len, hb=self.hb, surrogate_model=self.surrogate_model, kernel_name=self.kernel_name, reference=reference, dpp_type=self.dpp_type, acq_with_opt_indices=False, reg_coef=self.reg_coef)
+                best_candidates = acquisition_maximization_with_indices(best_seqs, opt_indices=opt_indices, batch_size=self.batch_size, stage=eff_len, hb=self.hb, surrogate_model=self.surrogate_model, kernel_name=self.kernel_name, reference=reference, dpp_type=self.dpp_type, acq_with_opt_indices=False)
 
                 t2 = time.time()
                 if type(best_candidates) == type(None):
@@ -255,7 +254,7 @@ class BayesAttack:
         if len(history) <= num_samples:
             return history
         else:
-            history_X_num = self.hb.eval_X_num[history].numpy()
+            history_X_num = self.hb.eval_X_reduced[history].numpy()
             _, selected_indices_ = kmeans_pp(history_X_num, num_samples, dist='hamming')
             history = [history[ind] for ind in selected_indices_]
             return history
@@ -362,8 +361,7 @@ class BayesAttack:
         # calculate acquisition
         if reference is None:
             _, reference, best_ind = self.hb.best_of_hamming(self.hb.orig_seq, max_radius)
-            reference = reference - self.reg_coef *  torch.count_nonzero(self.hb.eval_X_num[best_ind])
-        ei = self.surrogate_model.acquisition(cand_indices, bias=reference,reg_coef=self.reg_coef)
+        ei = self.surrogate_model.acquisition(cand_indices, bias=reference)
         topk_values, topk_indices = torch.topk(ei, min(len(ei),num_candids))
         center_candidates = [self.hb.seq_by_indices(cand_indices[idx]) for idx in topk_indices]
         return center_candidates
@@ -434,8 +432,8 @@ class BayesAttack:
             cand_indices = torch.unique(cand_indices.long(),dim=0).float()
             center_candidates = self.find_greedy_init_with_indices(cand_indices, max_radius, num_candids=self.batch_size, reference=0.0)
   
-            reference = self.hb.eval_Y[best_ind].item() - (max_radius + 1) * self.reg_coef
-            best_candidates = acquisition_maximization_with_indices(center_candidates, opt_indices=whole_indices, batch_size=self.batch_size, stage=max_radius-1, hb=self.hb, surrogate_model=self.surrogate_model, kernel_name=self.kernel_name, reference=reference, dpp_type=self.dpp_type, acq_with_opt_indices=False, reg_coef=self.reg_coef)
+            reference = self.hb.eval_Y[best_ind].item()
+            best_candidates = acquisition_maximization_with_indices(center_candidates, opt_indices=whole_indices, batch_size=self.batch_size, stage=max_radius-1, hb=self.hb, surrogate_model=self.surrogate_model, kernel_name=self.kernel_name, reference=reference, dpp_type=self.dpp_type, acq_with_opt_indices=False)
             if best_candidates == None:
                 if max_radius + 1 == nbd_size:
                     break

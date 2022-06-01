@@ -42,13 +42,13 @@ def fit_model_partial(
 def get_data_and_model_partial(hb, opt_indices, init_ind, prev_indices):
     train_Y = torch.cat([hb.eval_Y[prev_indices].view(len(prev_indices),1), hb.eval_Y[init_ind:]], dim=0)
     train_Y = train_Y.to(dtype=torch.double)
-    train_X_center = hb.eval_X_num[prev_indices][:,opt_indices].view(len(prev_indices),-1).cuda()
-    train_X = hb.eval_X_num[init_ind:, opt_indices].cuda()
+    train_X_center = hb.eval_X_reduced[prev_indices][:,opt_indices].view(len(prev_indices),-1).cuda()
+    train_X = hb.eval_X_reduced[init_ind:, opt_indices].cuda()
     train_X = torch.cat([train_X_center, train_X], dim=0)
     train_X = train_X.to(dtype=torch.double)
     _, L = train_X.shape
 
-    print("get data model parital", train_X.shape)
+    print("get data model partial", train_X.shape)
     surrogate_model = NewMixedSingleTaskGP(train_X=train_X, train_Y=train_Y, cat_dims=list(range(L))).cuda()
     surrogate_model.likelihood.noise_covar.register_constraint("raw_noise", GreaterThan(1e-5))
     surrogate_model.mean_module.initialize(constant=-1.0)

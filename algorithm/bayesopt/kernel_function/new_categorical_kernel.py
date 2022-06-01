@@ -32,11 +32,8 @@ class CategoricalKernel2(Kernel):
         **kwargs
     ) -> Tensor:
         if key == 0: # Memory efficient implementation
-            dists = BinaryGradientFunction2.apply(self.lengthscale.unsqueeze(-2), x1, x2)
+            dists = BinaryGradientFunction.apply(self.lengthscale.unsqueeze(-2), x1, x2)
         elif key == 1:
-            delta = x1.unsqueeze(-2) != x2.unsqueeze(-3)
-            dists = BinaryGradientFunction.apply(self.lengthscale.unsqueeze(-2), delta)
-        elif key == 2:
             delta = x1.unsqueeze(-2) != x2.unsqueeze(-3)
             dists = delta / self.lengthscale.unsqueeze(-2)
             if last_dim_is_batch:
@@ -57,38 +54,6 @@ def detach_variable(inputs):
         return x
 
 class BinaryGradientFunction(torch.autograd.Function):
-
-    @staticmethod
-    def forward(ctx, lengthscale, binary):
-        nbatch = 64
-        detached_ls = detach_variable(lengthscale)
-        N = binary.shape[0]
-        dists = []
-        for i in range(int(np.ceil(N / nbatch))):
-            tmp = binary[i*nbatch:(i+1)*nbatch] / detached_ls
-            dists.append(tmp.mean(-1))
-        dists_final = torch.cat(dists,0)
-        ctx.save_for_backward(binary, detached_ls)
-        return dists_final
-
-    @staticmethod
-    def backward(ctx, grad_output):
-        nbatch = 64
-        binary, detached_ls = ctx.saved_tensors
-        N, L = binary.shape[0], binary.shape[-1]
-        m = len(binary.shape)
-        if m == 3:
-            sumdim = [0,1]
-        elif m ==  4:
-            sumdim = [0,1,2]
-
-        grad = 0
-        for i in range(int(np.ceil(N / nbatch))):
-            tmp = -grad_output[i*nbatch:(i+1)*nbatch].unsqueeze(-1) * binary[i*nbatch:(i+1)*nbatch]
-            grad += torch.sum(tmp / torch.square(detached_ls), dim=sumdim) / L
-        return grad.view(1,1,-1), None
-
-class BinaryGradientFunction2(torch.autograd.Function):
 
     @staticmethod
     def forward(ctx, lengthscale, x1, x2):
@@ -180,7 +145,7 @@ if __name__=='__main__':
     
     m.raw_lengthscale.grad.zero_()
 
-    res2 = m.forward(x1, x2, key=2)
+    res2 = m.forward(x1, x2, key=1)
     print(res2)
 
     l2 = torch.sum(res2)

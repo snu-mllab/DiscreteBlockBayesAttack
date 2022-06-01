@@ -23,7 +23,7 @@ def greedy_ascent_with_indices(center_indices, opt_indices, stage, hb, surrogate
 
     # filtering observed candidates
     if filter:
-        remained_indices = find_remained_indices(candidates, hb.eval_X_num, N)
+        remained_indices = find_remained_indices(candidates, hb.eval_X_reduced, N)
     else:
         remained_indices = list(set(list(range(N))))
 
@@ -58,11 +58,11 @@ def greedy_ascent_with_indices(center_indices, opt_indices, stage, hb, surrogate
     else:
         return best_candidates_indices
 
-def acquisition_maximization_with_indices(cur_seqs, opt_indices, batch_size, stage, hb, surrogate_model, kernel_name, reference=None, patience=5, dpp_type='no', acq_with_opt_indices=True):
+def acquisition_maximization_with_indices(cur_seqs, opt_indices, batch_size, stage, hb, surrogate_model, kernel_name, reference=None, dpp_type='no', acq_with_opt_indices=True):
     global_candidates_, global_eis_ = [], []
 
     for cur_seq in cur_seqs:
-        cur_indices = hb.numbering_seq(cur_seq).view(1,-1)
+        cur_indices = hb.reduce_seq(cur_seq).view(1,-1)
         if acq_with_opt_indices:
             cur_ei = surrogate_model.acquisition(cur_indices[:,opt_indices], bias=reference)
         else:
@@ -90,7 +90,7 @@ def acquisition_maximization_with_indices(cur_seqs, opt_indices, batch_size, sta
     global_candidates, indices = unique(torch.cat(global_candidates_, dim=0), dim=0)
     global_eis = [global_eis_[ind] for ind in indices]
     N, L = global_candidates.shape
-    remained_indices = find_remained_indices(global_candidates, hb.eval_X_num, N)
+    remained_indices = find_remained_indices(global_candidates, hb.eval_X_reduced, N)
 
     global_candidates = global_candidates[remained_indices]
     global_eis = [global_eis[ind] for ind in remained_indices]
