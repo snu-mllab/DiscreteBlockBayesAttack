@@ -8,11 +8,10 @@ import numpy as np
 import torch
 import random
 
-from bayesopt.acquisition.algorithm import acquisition_maximization_with_indices
-from bayesopt.historyboard import HistoryBoard
-from bayesopt.surrogate_model.gp_model import MyGPModel
+from algorithms.bayesopt.acquisition.algorithm import acquisition_maximization_with_indices
+from algorithms.bayesopt.historyboard import HistoryBoard
+from algorithms.bayesopt.surrogate_model.gp_model import MyGPModel
 
-import copy
 import time
 from copy import deepcopy
 import gc

@@ -11,7 +11,7 @@ from typing import Dict, List, Optional, Any
 
 import torch
 from botorch.models.gp_regression import SingleTaskGP
-from bayesopt.kernel_function.new_categorical_kernel import CategoricalKernel2 # Memory efficient re-implementation of the categorical kernel
+from algorithms.bayesopt.kernel_function.new_categorical_kernel import CategoricalKernel2 # Memory efficient re-implementation of the categorical kernel
 from botorch.utils.containers import TrainingData
 from botorch.utils.transforms import normalize_indices
 from gpytorch.constraints import GreaterThan, Interval

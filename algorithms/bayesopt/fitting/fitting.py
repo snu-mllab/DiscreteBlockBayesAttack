@@ -2,9 +2,9 @@ from gpytorch.likelihoods import GaussianLikelihood
 from gpytorch.mlls import ExactMarginalLogLikelihood
 from botorch.models.gp_regression import SingleTaskGP
 from botorch.models.gp_regression_mixed import MixedSingleTaskGP
-from bayesopt.surrogate_model.gp_regression_mixed import NewMixedSingleTaskGP
+from algorithms.bayesopt.surrogate_model.gp_regression_mixed import NewMixedSingleTaskGP
 import torch
-from bayesopt.historyboard.hb import HistoryBoard
+from algorithms.bayesopt.historyboard.hb import HistoryBoard
 from gpytorch.constraints import GreaterThan
 
 import gpytorch

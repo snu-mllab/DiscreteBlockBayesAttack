@@ -106,7 +106,7 @@ class BlackBoxModel():
         return score
 
 import time
-from discrete_bayesian_opt import BayesOpt
+from algorithms.discrete_bayesian_opt import BayesOpt
 
 
 def get_nv():

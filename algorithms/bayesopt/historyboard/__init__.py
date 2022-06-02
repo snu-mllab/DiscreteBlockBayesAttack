@@ -1,1 +1,1 @@
-from bayesopt.historyboard.hb import HistoryBoard
+from algorithms.bayesopt.historyboard.hb import HistoryBoard

@@ -1,7 +1,7 @@
 import torch
 import numpy as np
-from bayesopt.acquisition.acquisition_function.acquisition_functions import expected_improvement
-from bayesopt.dpp.dpp import dpp_sample
+from algorithms.bayesopt.acquisition.acquisition_function.acquisition_functions import expected_improvement
+from algorithms.bayesopt.dpp.dpp import dpp_sample
 import copy 
 def find_remained_indices(candidates, history_X, N):
     if len(candidates)==0:

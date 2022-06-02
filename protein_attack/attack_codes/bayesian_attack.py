@@ -1,7 +1,6 @@
 import sys, os
-lib_path = os.path.abspath(os.path.join(__file__, '..', '..', 'algorithms'))
-sys.path.append(lib_path)
-from discrete_block_bayesian_opt import BlockBayesOpt
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))
+from algorithms import BlockBayesOpt
 import copy
 
 def get_query_budget(x, syndict, baseline='textfooler'):
@@ -16,7 +15,7 @@ def get_query_budget(x, syndict, baseline='textfooler'):
     return query_budget
 
 
-def bayesian_attack(x, y, syndict, BBM, dpp_type='dpp_posterior', block_size=40, max_loop=5, max_patience=20):
+def bayesian_attack(x, y, syndict, BBM, dpp_type='dpp_posterior', block_size=40, max_loop=5, max_patience=20, post_opt='v3'):
     '''
         x : size 1 x L tensor
         y : size 1 tensor
@@ -25,7 +24,8 @@ def bayesian_attack(x, y, syndict, BBM, dpp_type='dpp_posterior', block_size=40,
     y_ = y.cpu().detach()
     
     BBM.initialize_num_queries()
-    BBM.set_y(y_)
+    BBM.set_xy(x_, y_)
+    n_vertices = get_nv(syndict, x_, y_)
 
     # Skipped
     if BBM.get_score(x_) >= 0:
@@ -34,8 +34,9 @@ def bayesian_attack(x, y, syndict, BBM, dpp_type='dpp_posterior', block_size=40,
     else:
         query_budget = get_query_budget(x_, syndict, baseline='textfooler')
         BBM.set_query_budget(query_budget)
-        attacker = BlockBayesAttack(kernel_name, block_policy, dpp_type, block_size, max_loop, max_patience)
-        x_att = attacker.perform_search(x_, syndict, BBM)
+        attacker = BlockBayesAttack(block_size=block_size, max_patience=max_patience, post_opt=post_opt, dpp_type=dpp_type, max_loop=max_loop, niter=1)  
+        
+        x_att = attacker.perform_search(x_, n_vertices, BBM)
         num_queries = BBM.num_queries
         modif_rate = (torch.sum(x_att!=x_) / x_.shape[1]).item()
         succ = 1 if BBM.get_score(x_att,y_) >= 0 else 0 # 1 if Success else 0.

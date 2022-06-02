@@ -1,9 +1,9 @@
-from bayesopt.fitting.fitting import fit_model_partial
-from bayesopt.surrogate_model.model_wrapper import BaseModel
+from algorithms.bayesopt.fitting.fitting import fit_model_partial
+from algorithms.bayesopt.surrogate_model.model_wrapper import BaseModel
 import torch
 import numpy as np
 import gc
-from bayesopt.acquisition.acquisition_function.acquisition_functions import expected_improvement
+from algorithms.bayesopt.acquisition.acquisition_function.acquisition_functions import expected_improvement
 import gpytorch
 import copy
 class MyGPModel(BaseModel):

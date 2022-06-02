@@ -1,6 +1,6 @@
 from abc import abstractmethod
 import torch
-from bayesopt.historyboard.hb import HistoryBoard
+from algorithms.bayesopt.historyboard.hb import HistoryBoard
 
 class BaseModel:
     @abstractmethod
