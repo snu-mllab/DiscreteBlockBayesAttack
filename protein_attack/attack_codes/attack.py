@@ -94,11 +94,12 @@ def get_adv_dir(working_folder, kwargs):
     return adv_dir
 
 class BlackBoxModel():
-    def __init__(self, model, cb_handler):
+    def __init__(self, model, cb_handler, syndict):
         self.eval_cache = dict()
         self.initialize_num_queries()
         self.model = model
         self.cb_handler = cb_handler
+        self.syndict = syndict
 
     def initialize_num_queries(self):
         self.clean_cache()
@@ -110,33 +111,35 @@ class BlackBoxModel():
     
     def set_query_budget(self, query_budget):
         self.query_budget=query_budget
+    
+    def set_y(self, y):
+        if type(y) == np.ndarray: y = torch.LongTensor(y)
+        self.y = y
 
-    def get_pred(self,x, y):
+    def get_pred(self, x):
         '''
             output:
                 pred : 1 x nlabel tensor
                 y_pred : 1 tensor
         '''
         if type(x) == np.ndarray: x = torch.LongTensor(x)
-        if type(y) == np.ndarray: y = torch.LongTensor(y)
         with torch.no_grad():
             if x.cpu().detach() in self.eval_cache:
                 val_loss = self.eval_cache[x.cpu().detach()]
             else:
-                val_loss = loss_batch(self.model, x.cuda(), y.cuda(), cb_handler=self.cb_handler)
+                val_loss = loss_batch(self.model, x.cuda(), self.y.cuda(), cb_handler=self.cb_handler)
                 self.eval_cache[x.cpu().detach()] = val_loss
             self.num_queries += 1
         return val_loss[0], torch.argmax(val_loss[0]).view(1)
     
-    def get_score(self,x,y):
+    def get_score(self,x):
         if type(x) == np.ndarray: x = torch.LongTensor(x)
-        if type(y) == np.ndarray: y = torch.LongTensor(y)
         with torch.no_grad():
-            pred, _ = self.get_pred(x,y)
+            pred, _ = self.get_pred(x)
             prob = torch.nn.functional.softmax(pred)
-            y_ = y.cpu().detach().item()
+            y_ = self.y.cpu().detach().item()
             prob_del = torch.cat([prob[:,:y_],prob[:,y_+1:]],dim=-1)
-            score = (torch.max(prob_del) - prob[0][y]).cpu().detach().item()
+            score = (torch.max(prob_del) - prob[0][self.y]).cpu().detach().item()
         return score
 
 def generic_model(clas=True, **kwargs):
@@ -157,7 +160,7 @@ def generic_model(clas=True, **kwargs):
 
     syndict = get_synonym(vocab)
 
-    BBM = BlackBoxModel(model, cb_handler)
+    BBM = BlackBoxModel(model, cb_handler, syndict)
 
     results = []
     if kwargs['eval']==1:
