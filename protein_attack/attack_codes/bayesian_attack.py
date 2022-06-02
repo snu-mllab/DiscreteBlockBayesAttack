@@ -1,3 +1,6 @@
+import sys, os
+lib_path = os.path.abspath(os.path.join(__file__, '..', '..', 'algorithms'))
+sys.path.append(lib_path)
 from discrete_block_bayesian_opt import BlockBayesOpt
 import copy
 
@@ -20,6 +23,8 @@ def bayesian_attack(x, y, syndict, BBM, dpp_type='dpp_posterior', block_size=40,
     '''
     x_ = x.cpu().detach()
     y_ = y.cpu().detach()
+    
+    BBM.initialize_num_queries()
     BBM.set_y(y_)
 
     # Skipped
@@ -27,7 +32,6 @@ def bayesian_attack(x, y, syndict, BBM, dpp_type='dpp_posterior', block_size=40,
         return copy.deepcopy(x), None, None, -1
     # Success or Fail
     else:
-        BBM.initialize_num_queries()
         query_budget = get_query_budget(x_, syndict, baseline='textfooler')
         BBM.set_query_budget(query_budget)
         attacker = BlockBayesAttack(kernel_name, block_policy, dpp_type, block_size, max_loop, max_patience)

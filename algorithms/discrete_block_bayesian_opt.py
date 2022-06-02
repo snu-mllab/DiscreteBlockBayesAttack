@@ -217,7 +217,7 @@ class BlockBayesAttack:
             if self.check_query_const(): break
 
             if KEY[0] < self.max_loop: 
-                print("280 line.")
+                print("220 line.")
                 print(KEY[0], self.max_loop)
                 new = (KEY[0]+1, KEY[1])
                 self.BLOCK_QUEUE.append(new)
