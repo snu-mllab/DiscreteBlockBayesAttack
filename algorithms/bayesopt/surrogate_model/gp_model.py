@@ -7,10 +7,10 @@ from algorithms.bayesopt.acquisition.acquisition_function.acquisition_functions 
 import gpytorch
 import copy
 class MyGPModel(BaseModel):
-    def __init__(self, niter : int = 20):
+    def __init__(self, fit_iter : int = 20):
         self.model = None 
         self.partition_size = 512
-        self.niter = niter
+        self.fit_iter = fit_iter
 
     def fit_partial(self, hb, opt_indices, init_ind, prev_indices):
         if type(self.model) == type(None):
@@ -18,7 +18,7 @@ class MyGPModel(BaseModel):
         else:
             params = copy.deepcopy(self.model.state_dict())
         del self.model
-        self.model = fit_model_partial(hb, opt_indices, init_ind, prev_indices, params=params, niter=self.niter)
+        self.model = fit_model_partial(hb, opt_indices, init_ind, prev_indices, params=params, fit_iter=self.fit_iter)
     
     def predict(self, eval_X):
         self.model.eval()

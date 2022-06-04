@@ -8,6 +8,7 @@ for bayesian optimization: `botorch` `dppy`
 1. Create conda environment: `conda create -n protein_atk python=3.9.7` and `conda activate protein_atk`
 2. Install pytorch: `conda install pytorch -c pytorch`
 3. Install fastai: `conda install -c fastai fastai=1.0.52`
+pip install spacy 추가.
 4. Install fire: `conda install fire -c conda-forge`
 5. Install botorch: `pip install botorch`
 6. Install dppy: `pip install dppy`

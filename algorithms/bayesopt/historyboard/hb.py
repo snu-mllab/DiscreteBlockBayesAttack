@@ -5,11 +5,13 @@ import torch
 import copy
 import random
 import numpy as np
+import time
 class HistoryBoard(object):
     def __init__(self, orig_X, n_vertices):
         self.orig_X = orig_X
         self.eval_X = None
         self.eval_Y = None 
+        self.time_list = [time.time()]
         self.hamming_with_orig = None
         self.len_seq = orig_X.shape[-1]
 
@@ -33,11 +35,13 @@ class HistoryBoard(object):
             self.eval_X_reduced = new_seq
             self.hamming_with_orig = [0]
             self.eval_Y = new_Y.view(1,1)
+            self.time_list.append(time.time())
         else:
             self.eval_X = torch.cat([self.eval_X, new_X.view(1,self.len_seq)])
             self.eval_X_reduced = torch.cat([self.eval_X_reduced, new_seq])
             self.hamming_with_orig.append(int(torch.sum(new_seq !=0).item()))
             self.eval_Y = torch.cat([self.eval_Y, new_Y.view(1,1)])
+            self.time_list.append(time.time())
         self.str2ind[new_str] = len(self.eval_X) - 1
         
     def add_data(self, new_Xs, new_Ys):
@@ -49,6 +53,7 @@ class HistoryBoard(object):
             new_modifs = [int(i) for i in torch.sum(new_seqs!=0,dim=1)]
             self.hamming_with_orig = new_modifs
             self.eval_Y = new_Ys.view(-1,1)
+            self.time_list.extend([time.time() for i in range(len(new_seqs))])
         else:
             init_ind = len(self.eval_X)
             self.eval_X = torch.cat([self.eval_X, new_Xs.view(-1,self.len_seq)])
@@ -56,15 +61,16 @@ class HistoryBoard(object):
             new_modifs = [int(i) for i in torch.sum(new_seqs!=0,dim=1)]
             self.hamming_with_orig = new_modifs
             self.eval_Y = torch.cat([self.eval_Y, new_Ys.view(-1,1)])
+            self.time_list.extend([time.time() for i in range(len(new_seqs))])
         for ct, new_X in enumerate(new_Xs):
             new_str = self.seq2str(new_X)
             self.str2ind[new_str] = init_ind + ct
 
     def seq2str(self, seq):
-        seq = seq.view(-1)
+        seq_ = seq.view(-1)
         str_ = ''
-        for i in seq:
-            str_+=f'{i},'
+        for i in seq_:
+            str_+=f'{int(i)},'
         return str_
 
     def one_ball_from_orig(self):
@@ -126,14 +132,17 @@ class HistoryBoard(object):
             return - numbered torch float Tensor of given seq
         '''
         if len(seq.shape) == 2:
-            assert seq.shape[0] == 1 and seq.shape[1] == self.len_seq, f"input shape : {seq.shape[0]},{seq.shape[1]}, something wrong"
+            assert seq.shape[0] == 1 and (seq.shape[1] == self.len_seq or seq.shape[1] == self.eff_len_seq), f"input shape : {seq.shape[0]},{seq.shape[1]}, something wrong"
             seq_ = seq.view(-1)
         elif len(seq.shape) == 1:
-            assert seq.shape[0] == self.len_seq, f"input shape : {seq.shape[0]}, something wrong"
+            assert seq.shape[0] == self.len_seq or seq.shape[0] == self.eff_len_seq, f"input shape : {seq.shape[0]}, something wrong"
             seq_ = seq
         else:
             assert f"input shape : {seq.shape}, something wrong"
-        return seq_[self.target_indices].view(1,-1)
+        if seq_.numel() == self.eff_len_seq:
+            return seq_.view(1,-1)
+        else:
+            return seq_[self.target_indices].view(1,-1)
 
     def reduce_seqs(self, seqs):
         '''
@@ -268,7 +277,7 @@ class HistoryBoard(object):
                 targets.append([idx, self.eval_Y[idx][0]])
         if len(targets):
             best_ind, best_score = sorted(targets, key = lambda x: -x[1])[0]
-            return self.eval_texts[best_ind], best_score, best_ind
+            return self.eval_X[best_ind], best_score, best_ind
         else:
             return None, -1, None
 
@@ -319,9 +328,8 @@ class HistoryBoard(object):
         return modifs
     
     def is_seq_in_hb(self, seq):
-        seq_ = seq.view(1,-1)
-        bv = torch.all(seq_ == self.eval_X,dim=1)
-        return torch.any(bv)
+        str_ = self.seq2str(seq)
+        return str_ in self.str2ind
     
     def get_seq_ind(self, seq):
         str_ = self.seq2str(seq)

@@ -19,7 +19,7 @@ def fit_model_partial(
         init_ind : int = None,
         prev_indices : int = None,
         params : dict = {},
-        niter : int = 20,
+        fit_iter : int = 20,
     ):
     surrogate_model, train_X = get_data_and_model_partial(hb, opt_indices, init_ind, prev_indices)
     if params:
@@ -30,7 +30,7 @@ def fit_model_partial(
     ], lr=0.1)
 
     mll = ExactMarginalLogLikelihood(surrogate_model.likelihood, surrogate_model).cuda()
-    for i in range(niter):
+    for i in range(fit_iter):
         optimizer.zero_grad()
         output = surrogate_model(train_X)
         loss = -mll(output, surrogate_model.train_targets)
