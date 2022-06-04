@@ -1,3 +1,3 @@
 [submodule "nlp_attack/TextAttack"]
 	path = nlp_attack/TextAttack
-	url = https://github.com/badeok0716/TextAttack_DBBA.git
+	url = https://github.com/badeok0716/TextAttackDBBA.git
