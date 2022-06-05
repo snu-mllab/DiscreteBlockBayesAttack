@@ -3,6 +3,8 @@
 ## Setup
 1. If `gcc` do not exist in your system, please install build essential: `sudo apt-get install build-essential`
 2. Create conda environment: `conda create -n nlp_atk python=3.9.7` and `conda activate nlp_atk`
+conda install jsonnet -c conda-forge
+conda install pytorch==1.10.1 torchvision==0.11.2 torchaudio==0.10.1 cudatoolkit=11.3 -c pytorch -c conda-forge
 3. Install textattack: `cd TextAttack;pip install -e '.[tensorflow]'`
 4. Install botorch: `pip install botorch`
 5. Install dppy: `pip install dppy`
@@ -49,66 +51,66 @@ We provide commands to reproduce our results in table 1.
 #### WordNet 
 BERT (Movie Review, WordNet)
 ```bash
-textattack attack --silent --shuffle --shuffle-seed 0 --recipe bayesattack-wordnet --model bert-base-uncased-mr --random-seed 0 --num-examples 500 --sidx 0 --pkl-dir test --kernel-name categorical --search-type post-opt_sod --block-policy straight --dpp-type dpp_posterior --max-budget-key-type pwws --max-loop 5 --max-patience 100
+textattack attack --silent --shuffle --shuffle-seed 0 --recipe bayesattack-wordnet --model bert-base-uncased-mr --random-seed 0 --num-examples 500 --sidx 0 --pkl-dir test --search-type post-opt_sod --dpp-type dpp_posterior --max-budget-key-type pwws --max-loop 5 --max-patience 100
 ```
 BERT (AG's News, WordNet)
 ```bash
-textattack attack --silent --shuffle --shuffle-seed 0 --recipe bayesattack-wordnet --model bert-base-uncased-ag-news --random-seed 0 --num-examples 500 --sidx 0 --pkl-dir test --kernel-name categorical --search-type post-opt_sod --block-policy straight --dpp-type dpp_posterior --max-budget-key-type pwws --max-loop 5 --max-patience 100
+textattack attack --silent --shuffle --shuffle-seed 0 --recipe bayesattack-wordnet --model bert-base-uncased-ag-news --random-seed 0 --num-examples 500 --sidx 0 --pkl-dir test --search-type post-opt_sod --dpp-type dpp_posterior --max-budget-key-type pwws --max-loop 5 --max-patience 100
 ```
 LSTM (Movie Review, WordNet)
 ```bash
-textattack attack --silent --shuffle --shuffle-seed 0 --recipe bayesattack-wordnet --model lstm-mr --random-seed 0 --num-examples 500 --sidx 0 --pkl-dir test --kernel-name categorical --search-type post-opt_sod --block-policy straight --dpp-type dpp_posterior --max-budget-key-type pwws --max-loop 5 --max-patience 100
+textattack attack --silent --shuffle --shuffle-seed 0 --recipe bayesattack-wordnet --model lstm-mr --random-seed 0 --num-examples 500 --sidx 0 --pkl-dir test --search-type post-opt_sod --dpp-type dpp_posterior --max-budget-key-type pwws --max-loop 5 --max-patience 100
 ```
 LSTM (AG's News, WordNet)
 ```bash
-textattack attack --silent --shuffle --shuffle-seed 0 --recipe bayesattack-wordnet --model lstm-ag-news --random-seed 0 --num-examples 500 --sidx 0 --pkl-dir test --kernel-name categorical --search-type post-opt_sod --block-policy straight --dpp-type dpp_posterior --max-budget-key-type pwws --max-loop 5 --max-patience 100
+textattack attack --silent --shuffle --shuffle-seed 0 --recipe bayesattack-wordnet --model lstm-ag-news --random-seed 0 --num-examples 500 --sidx 0 --pkl-dir test --search-type post-opt_sod --dpp-type dpp_posterior --max-budget-key-type pwws --max-loop 5 --max-patience 100
 ```
 XLNet (Movie Review, WordNet)
 ```bash
-textattack attack --silent --shuffle --shuffle-seed 0 --recipe bayesattack-wordnet --model xlnet-base-cased-mr --random-seed 0 --num-examples 500 --sidx 0 --pkl-dir test --kernel-name categorical --search-type post-opt_sod --block-policy straight --dpp-type dpp_posterior --max-budget-key-type pwws --max-loop 5 --max-patience 100
+textattack attack --silent --shuffle --shuffle-seed 0 --recipe bayesattack-wordnet --model xlnet-base-cased-mr --random-seed 0 --num-examples 500 --sidx 0 --pkl-dir test --search-type post-opt_sod --dpp-type dpp_posterior --max-budget-key-type pwws --max-loop 5 --max-patience 100
 ```
 
 #### Embedding
 BERT (Movie Review, Embedding)
 ```bash
-textattack attack --silent --shuffle --shuffle-seed 0 --recipe bayesattack-embedding --model bert-base-uncased-mr --random-seed 0 --num-examples 500 --sidx 0 --pkl-dir test --kernel-name categorical --search-type post-opt_sod --block-policy straight --dpp-type dpp_posterior --max-budget-key-type textfooler --max-loop 5 --max-patience 50
+textattack attack --silent --shuffle --shuffle-seed 0 --recipe bayesattack-embedding --model bert-base-uncased-mr --random-seed 0 --num-examples 500 --sidx 0 --pkl-dir test --search-type post-opt_sod --dpp-type dpp_posterior --max-budget-key-type textfooler --max-loop 5 --max-patience 50
 ```
 BERT (AG's News, Embedding)
 ```bash
-textattack attack --silent --shuffle --shuffle-seed 0 --recipe bayesattack-embedding --model bert-base-uncased-ag-news --random-seed 0 --num-examples 500 --sidx 0 --pkl-dir test --kernel-name categorical --search-type post-opt_sod --block-policy straight --dpp-type dpp_posterior --max-budget-key-type textfooler --max-loop 5 --max-patience 50
+textattack attack --silent --shuffle --shuffle-seed 0 --recipe bayesattack-embedding --model bert-base-uncased-ag-news --random-seed 0 --num-examples 500 --sidx 0 --pkl-dir test --search-type post-opt_sod --dpp-type dpp_posterior --max-budget-key-type textfooler --max-loop 5 --max-patience 50
 ```
 LSTM (Movie Review, Embedding)
 ```bash
-textattack attack --silent --shuffle --shuffle-seed 0 --recipe bayesattack-embedding --model lstm-mr --random-seed 0 --num-examples 500 --sidx 0 --pkl-dir test --kernel-name categorical --search-type post-opt_sod --block-policy straight --dpp-type dpp_posterior --max-budget-key-type textfooler --max-loop 5 --max-patience 50
+textattack attack --silent --shuffle --shuffle-seed 0 --recipe bayesattack-embedding --model lstm-mr --random-seed 0 --num-examples 500 --sidx 0 --pkl-dir test --search-type post-opt_sod --dpp-type dpp_posterior --max-budget-key-type textfooler --max-loop 5 --max-patience 50
 ```
 LSTM (AG's News, Embedding)
 ```bash
-textattack attack --silent --shuffle --shuffle-seed 0 --recipe bayesattack-embedding --model lstm-ag-news --random-seed 0 --num-examples 500 --sidx 0 --pkl-dir test --kernel-name categorical --search-type post-opt_sod --block-policy straight --dpp-type dpp_posterior --max-budget-key-type textfooler --max-loop 5 --max-patience 50
+textattack attack --silent --shuffle --shuffle-seed 0 --recipe bayesattack-embedding --model lstm-ag-news --random-seed 0 --num-examples 500 --sidx 0 --pkl-dir test --search-type post-opt_sod --dpp-type dpp_posterior --max-budget-key-type textfooler --max-loop 5 --max-patience 50
 ```
 XLNet (Movie Review, Embedding)
 ```bash
-textattack attack --silent --shuffle --shuffle-seed 0 --recipe bayesattack-embedding --model xlnet-base-cased-mr --random-seed 0 --num-examples 500 --sidx 0 --pkl-dir test --kernel-name categorical --search-type post-opt_sod --block-policy straight --dpp-type dpp_posterior --max-budget-key-type textfooler --max-loop 5 --max-patience 50
+textattack attack --silent --shuffle --shuffle-seed 0 --recipe bayesattack-embedding --model xlnet-base-cased-mr --random-seed 0 --num-examples 500 --sidx 0 --pkl-dir test --search-type post-opt_sod --dpp-type dpp_posterior --max-budget-key-type textfooler --max-loop 5 --max-patience 50
 ```
 
 #### HowNet
 BERT (Movie Review, HowNet)
 ```bash
-textattack attack --silent --shuffle --shuffle-seed 0 --recipe bayesattack-hownet --model bert-base-uncased-mr --random-seed 0 --num-examples 500 --sidx 0 --pkl-dir test --kernel-name categorical --search-type post-opt_sod --block-policy straight --dpp-type dpp_posterior --max-budget-key-type pso --max-loop 5 --max-patience 100
+textattack attack --silent --shuffle --shuffle-seed 0 --recipe bayesattack-hownet --model bert-base-uncased-mr --random-seed 0 --num-examples 500 --sidx 0 --pkl-dir test --search-type post-opt_sod --dpp-type dpp_posterior --max-budget-key-type pso --max-loop 5 --max-patience 100
 ```
 BERT (AG's News, HowNet)
 ```bash
-textattack attack --silent --shuffle --shuffle-seed 0 --recipe bayesattack-hownet --model bert-base-uncased-ag-news --random-seed 0 --num-examples 500 --sidx 0 --pkl-dir test --kernel-name categorical --search-type post-opt_sod --block-policy straight --dpp-type dpp_posterior --max-budget-key-type pso --max-loop 5 --max-patience 100
+textattack attack --silent --shuffle --shuffle-seed 0 --recipe bayesattack-hownet --model bert-base-uncased-ag-news --random-seed 0 --num-examples 500 --sidx 0 --pkl-dir test --search-type post-opt_sod --dpp-type dpp_posterior --max-budget-key-type pso --max-loop 5 --max-patience 100
 ```
 LSTM (Movie Review, HowNet)
 ```bash
-textattack attack --silent --shuffle --shuffle-seed 0 --recipe bayesattack-hownet --model lstm-mr --random-seed 0 --num-examples 500 --sidx 0 --pkl-dir test --kernel-name categorical --search-type post-opt_sod --block-policy straight --dpp-type dpp_posterior --max-budget-key-type pso --max-loop 5 --max-patience 100
+textattack attack --silent --shuffle --shuffle-seed 0 --recipe bayesattack-hownet --model lstm-mr --random-seed 0 --num-examples 500 --sidx 0 --pkl-dir test --search-type post-opt_sod --dpp-type dpp_posterior --max-budget-key-type pso --max-loop 5 --max-patience 100
 ```
 LSTM (AG's News, HowNet)
 ```bash
-textattack attack --silent --shuffle --shuffle-seed 0 --recipe bayesattack-hownet --model lstm-ag-news --random-seed 0 --num-examples 500 --sidx 0 --pkl-dir test --kernel-name categorical --search-type post-opt_sod --block-policy straight --dpp-type dpp_posterior --max-budget-key-type pso --max-loop 5 --max-patience 100
+textattack attack --silent --shuffle --shuffle-seed 0 --recipe bayesattack-hownet --model lstm-ag-news --random-seed 0 --num-examples 500 --sidx 0 --pkl-dir test --search-type post-opt_sod --dpp-type dpp_posterior --max-budget-key-type pso --max-loop 5 --max-patience 100
 ```
 XLNet (Movie Review, HowNet)
 ```bash
-textattack attack --silent --shuffle --shuffle-seed 0 --recipe bayesattack-hownet --model xlnet-base-cased-mr --random-seed 0 --num-examples 500 --sidx 0 --pkl-dir test --kernel-name categorical --search-type post-opt_sod --block-policy straight --dpp-type dpp_posterior --max-budget-key-type pso --max-loop 5 --max-patience 100
+textattack attack --silent --shuffle --shuffle-seed 0 --recipe bayesattack-hownet --model xlnet-base-cased-mr --random-seed 0 --num-examples 500 --sidx 0 --pkl-dir test --search-type post-opt_sod --dpp-type dpp_posterior --max-budget-key-type pso --max-loop 5 --max-patience 100
 ```
 

@@ -288,7 +288,7 @@ class BlackBoxModel():
     def get_scores(self, xs, require_transform=True):
         s = []
         for x in xs:
-            s.append(self.get_score(x))
+            s.append(self.get_score(x,require_transform=require_transform))
         return s
 
 if __name__ == '__main__':

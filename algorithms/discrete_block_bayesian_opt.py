@@ -28,7 +28,7 @@ class BlockBayesAttack:
         post_opt : ['', 'v2', 'v3', 'v4']
     """
 
-    def __init__(self, block_size=40, batch_size=4, update_step=1, max_patience=50, post_opt='', use_sod=True, dpp_type='dpp_posterior', max_loop=5, fit_iter=1):
+    def __init__(self, block_size=40, batch_size=4, update_step=1, max_patience=50, post_opt='v3', use_sod=True, dpp_type='dpp_posterior', max_loop=5, fit_iter=1):
         
         self.block_size = block_size
         self.batch_size = batch_size
@@ -551,6 +551,7 @@ class BlockBayesAttack:
             if self.check_query_const(): break
 
             cur_seq, best_ind, patience = self.eval_and_add_data_best_ind(best_candidates, cur_seq, best_ind, tmp, tmp_modif, patience)
+            
             if self.check_query_const() or patience <= 0: break
             i += 1
         return self.hb.eval_X[best_ind].view(1,-1)
