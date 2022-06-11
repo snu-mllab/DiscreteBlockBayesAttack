@@ -39,6 +39,7 @@ def fit_model_partial(
     return surrogate_model
 
 def get_data_and_model_partial(hb, opt_indices, init_ind, prev_indices):
+    print(len(hb.eval_Y))
     train_Y = torch.cat([hb.eval_Y[prev_indices].view(len(prev_indices),1), hb.eval_Y[init_ind:]], dim=0)
     train_Y = train_Y.to(dtype=torch.double)
     train_X_center = hb.eval_X_reduced[prev_indices][:,opt_indices].view(len(prev_indices),-1).cuda()

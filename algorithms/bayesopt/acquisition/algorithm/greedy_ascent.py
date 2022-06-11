@@ -57,10 +57,12 @@ def greedy_ascent_with_indices(center_indices, opt_indices, stage, hb, surrogate
         return best_candidates_indices, topk_values
     else:
         return best_candidates_indices
-
+import time
 def acquisition_maximization_with_indices(cur_seqs, opt_indices, batch_size, stage, hb, surrogate_model, reference=None, dpp_type='no', acq_with_opt_indices=True):
     global_candidates_, global_eis_ = [], []
 
+    t0 = time.time()
+    print("len cur_seqs:",len(cur_seqs))
     for cur_seq in cur_seqs:
         cur_indices = hb.reduce_seq(cur_seq).view(1,-1)
         if acq_with_opt_indices:
@@ -86,11 +88,13 @@ def acquisition_maximization_with_indices(cur_seqs, opt_indices, batch_size, sta
 
         global_candidates_.append(candidates)
         global_eis_.extend(eis)
+    t1 = time.time()
 
     global_candidates, indices = unique(torch.cat(global_candidates_, dim=0), dim=0)
     global_eis = [global_eis_[ind] for ind in indices]
     N, L = global_candidates.shape
     remained_indices = find_remained_indices(global_candidates, hb.eval_X_reduced, N)
+    t2 = time.time()
 
     global_candidates = global_candidates[remained_indices]
     global_eis = [global_eis[ind] for ind in remained_indices]
@@ -101,10 +105,12 @@ def acquisition_maximization_with_indices(cur_seqs, opt_indices, batch_size, sta
     if len(global_candidates) == 0:
         return None
 
+    t3 = time.time()
     if dpp_type == 'no' or dpp_type == 'no_one':
         topk_values, topk_indices = torch.topk(global_eis, min(len(global_eis),batch_size))
         candidates = [hb.seq_by_indices(global_candidates[ind]) for ind in topk_indices]
     elif dpp_type == 'dpp_posterior':
+        t4 = time.time()
         topk_values, topk_indices = torch.topk(global_eis, min(len(global_eis),100))
         global_candidates = global_candidates[topk_indices]
 
@@ -119,7 +125,8 @@ def acquisition_maximization_with_indices(cur_seqs, opt_indices, batch_size, sta
         else:
             best_indices = dpp_sample(Lmat, k=num, T=0)
         candidates = [hb.seq_by_indices(global_candidates[ind]) for ind in best_indices]
-    
+        t5 = time.time()
+    print(t1-t0,t2-t1,t3-t2,t4-t3,t5-t4)
     if len(candidates):
         return candidates
     else:

@@ -241,7 +241,7 @@ class BlockBayesAttack:
                     #scores = self.BBM.get_scores(rand_seqs)
                     scores = self.eval_and_add_data(rand_seqs, return_scores=True)
                     if scores:
-                        max_ind = torch.argmax(scores)
+                        max_ind = np.argmax(scores)
                         center_seq = rand_seqs[max_ind]
                         if scores[max_ind] >= 0: return center_seq, [self.hb.time_list, self.hb.eval_X, self.hb.eval_Y, None]
                         search_over = False
@@ -293,7 +293,7 @@ class BlockBayesAttack:
                 candid_seqs = [self.hb.seq_by_indices(cand) for cand in candids]
                 #candid_scores = self.BBM.get_scores(candid_seqs)
                 candid_scores = self.eval_and_add_data(candid_seqs, return_scores=True)
-                max_ind = torch.argmax(candid_scores)
+                max_ind = np.argmax(candid_scores)
                 if candid_scores[max_ind]>=0: return candid_seqs[max_ind], candid_scores[max_ind], True
                 if best_score < candid_scores[max_ind]:
                     best_seq = candid_seqs[max_ind]
@@ -336,8 +336,12 @@ class BlockBayesAttack:
         print(Q_)
         return Q_
 
-    def get_index_order_for_block_decomposition(self):
-        index_order = list(range(len(self.hb.target_indices)))
+    def get_index_order_for_block_decomposition(self, rank_policy='straight'):
+        if rank_policy == 'straight':
+            index_order = list(range(len(self.hb.target_indices)))
+        elif rank_policy == 'beta':
+            beta = 1/(self.surrogate_model.model.covar_module.base_kernel.lengthscale.detach().cpu()+1e-6)
+            index_order = torch.argsort(beta)[0]
         index_order = [int(i) for i in index_order]
         return index_order
 
@@ -520,25 +524,32 @@ class BlockBayesAttack:
                 prev_radius = max_radius
                 nbd_size = 2
             print("final", i, max_radius)
+            t0 = time.time()
             if max_radius == 0:
                 return self.hb.eval_X[best_ind].view(1,-1)
             
             self.surrogate_model.fit_partial(self.hb, whole_indices, init_idx, sum_history)
             best_candidate = cur_seq
+            t1 = time.time()
 
             # best in ball seq
             bib_seq, bib_score, _ = self.hb.best_of_hamming_orig(distance=max_radius)
+            t2 = time.time()
 
             best_indiced = self.hb.reduce_seq(best_candidate)
             bib_indiced = self.hb.reduce_seq(bib_seq)  
             orig_indiced = self.hb.reduce_seq(self.orig_X)
             rand_indices = self.hb.subset_sampler(best_indiced, 300, nbd_size)
+            t3 = time.time()
 
             cand_indices = torch.cat([orig_indiced.view(1,-1), best_indiced.view(1,-1), bib_indiced.view(1,-1), rand_indices], dim=0)
             cand_indices = torch.unique(cand_indices.long(),dim=0).float()
             center_candidates = self.find_greedy_init_with_indices_v2(cand_indices, max_radius, num_candids=self.batch_size, reference=0.0)  
+            t4 = time.time()
             reference = self.hb.eval_Y[best_ind].item()
             best_candidates = acquisition_maximization_with_indices(center_candidates, opt_indices=opt_indices, batch_size=self.batch_size, stage=max_radius-1, hb=self.hb, surrogate_model=self.surrogate_model, reference=reference, dpp_type=self.dpp_type, acq_with_opt_indices=False)
+            t5 = time.time()
+            print(t1-t0, t2-t1, t3-t2, t4-t3, t5-t4)
             if best_candidates == None:
                 if max_radius + 1 == nbd_size:
                     break
