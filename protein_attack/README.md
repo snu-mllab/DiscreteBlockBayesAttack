@@ -46,6 +46,7 @@ python attack_codes/attack.py classification --method greedy --seed 0 --sidx 0 -
 
 # Our Method
 |||Level 0 |||Level 1 ||| Level 2||
+|---|---|---|---|---|---|---|---|---|---|
 |Method	|ASR |MR	|Qrs |ASR |MR	|Qrs |ASR |MR |Qrs|
 |TF | 83.8 | 3.2 | 619 | 85.8 | 3.0 | 584 | 89.6 | 2.5 | 538 |
 |BBA | __99.8__ | __2.9__ | __285__ | __99.8__ | __2.3__ | __293__ | __100.0__ | __2.0__ | __231__|
