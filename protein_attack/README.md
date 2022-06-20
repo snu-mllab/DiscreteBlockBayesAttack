@@ -46,8 +46,9 @@ python attack_codes/attack.py classification --method greedy --seed 0 --sidx 0 -
 
 # Our Method
 
-<table>
+<table class="center" style="text-align:center;">
   <tr>
+    <td> </td>
     <td colspan="3">level 0</td>
     <td colspan="3">level 1</td>
     <td colspan="3">level 2</td>
