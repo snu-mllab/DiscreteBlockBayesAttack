@@ -27,64 +27,6 @@
 
 
 
-\bottomrule
-\end{tabular}
-\end{adjustbox}
-\end{subtable}
-    \begin{subtable}[h!]{0.655 \columnwidth}
-\caption{Embedding}
-\centering
-\begin{adjustbox}{max width=\columnwidth}
-\begin{tabular}{cccccc}
-    \toprule
-Dataset&Model&Method & ASR (\%)& MR (\%)& Qrs \\
-
-\midrule
-AG&BERT-base&   TF& 84.7& 24.9&   346\\
-&    & BBA& \textbf{96.0}& \textbf{18.9}&   \textbf{154}\\ %% 20
-\cmidrule{2-6}
-&LSTM&   TF& 94.9& 17.3&   228\\
-&    & BBA& \textbf{98.5}& \textbf{16.6}&   \textbf{142}\\ %% 20
-\midrule
-MR&XLNet-base&   TF& 95.0& 18.0&   101\\
-&    & BBA& \textbf{96.3}& \textbf{16.2}&    \textbf{68}\\ %% 20
-\cmidrule{2-6}
-&BERT-base&   TF& 89.2& 20.0&   115\\
-&    & BBA& \textbf{95.7}& \textbf{16.9}&    \textbf{67}\\ %% 20
-\cmidrule{2-6}
-&LSTM&   TF& \textbf{98.2}& 13.6&    72\\
-&    & BBA& \textbf{98.2}& \textbf{13.1}&    \textbf{54}\\ %% 20
-\bottomrule
-\end{tabular}
-\end{adjustbox}
-\end{subtable}
-\begin{subtable}[h!]{0.682 \columnwidth}
-    \caption{HowNet}
-    \centering
-    \begin{adjustbox}{max width=\columnwidth}
-    \begin{tabular}{cccccc}
-        \toprule
-Dataset&Model&Method & ASR (\%)& MR (\%)& Qrs \\
-\midrule
-AG&BERT-base&  PSO& 67.2& 21.2& 65860\\
-&    &BBA& \textbf{70.8}& \textbf{15.5}&  \textbf{5176}\\ %% 100
-\cmidrule{2-6}
-&LSTM&  PSO& 71.0& 19.7& 44956\\
-&    & BBA& \textbf{71.9}& \textbf{13.7}&  \textbf{3278}\\ %% 100
-\midrule
-MR&XLNet-base&  PSO& \textbf{91.3}& 18.6&  4504\\
-&    & BBA& \textbf{91.3}& \textbf{11.7}&   \textbf{321}\\ %% 100
-\cmidrule{2-6}
-&BERT-base&  PSO& \textbf{90.9}& 17.3&  6299\\
-&    & BBA& \textbf{90.9}& \textbf{12.4}&   \textbf{403}\\ %% 100
-\cmidrule{2-6}
-&LSTM&  PSO& \textbf{94.4}& 15.3&  2030\\
-&    & BBA& \textbf{94.4}& \textbf{11.2}&   \textbf{138}\\ %% 100
-\bottomrule
-    \end{tabular}
-    \end{adjustbox}
-    \end{subtable}
-\end{table*}
 
 ### Baselines (PWWS, TextFooler, PSO)
 To reproduce results of the baseline method in table 1, we produce some example commands.
@@ -112,15 +54,15 @@ We provide commands to reproduce our results in table 1. The `max-patience` valu
 |Dataset|Model|Method | ASR (\%)| MR (\%)| Qrs |
 |---|---|---|---|---|---|
 |AG|BERT-base| PWWS| 57.1| 18.3|   367|
-||    | BBA| \textbf{77.4}| \textbf{17.8}|   \textbf{217}|
+||    | BBA| __77.4__| __17.8__|   __217__|
 ||LSTM| PWWS| 78.3| 16.4|   336|
-||    | BBA| \textbf{83.2}| \textbf{15.4}|   \textbf{190}|
-|MR|XLNet-base| PWWS| 83.9| \textbf{14.4}|   143|
-||    | BBA| \textbf{87.8}| \textbf{14.4}|    \textbf{77}|
+||    | BBA| __83.2__| __15.4__|   __190__|
+|MR|XLNet-base| PWWS| 83.9| __14.4__|   143|
+||    | BBA| __87.8__| __14.4__|    __77__|
 ||BERT-base| PWWS| 82.0| 15.0|   143|
-||    | BBA| \textbf{88.3}| \textbf{14.6}|    \textbf{94}|
-||LSTM| PWWS| \textbf{94.2}| 13.3|   132|
-||    | BBA| \textbf{94.2}| \textbf{13.0}|    \textbf{67}|
+||    | BBA| __88.3__| __14.6__|    __94__|
+||LSTM| PWWS| __94.2__| 13.3|   132|
+||    | BBA| __94.2__| __13.0__|    __67__|
 BERT (AG's News, WordNet)
 ```bash
 textattack attack --silent --shuffle --shuffle-seed 0 --random-seed 0 --recipe bayesattack-wordnet --model bert-base-uncased-ag-news --num-examples 500 --sidx 0 --pkl-dir RESULTS --post-opt v3 --use-sod --dpp-type dpp_posterior --max-budget-key-type pwws --max-patience 50
@@ -145,6 +87,19 @@ textattack attack --silent --shuffle --shuffle-seed 0 --random-seed 0 --recipe b
 
 
 #### Embedding
+
+|Dataset|Model|Method | ASR (\%)| MR (\%)| Qrs | 
+|AG|BERT-base|   TF| 84.7| 24.9|   346|
+||    | BBA| __96.0__| __18.9__|   __154__|
+||LSTM|   TF| 94.9| 17.3|   228|
+||    | BBA| __98.5__| __16.6__|   __142__|
+|MR|XLNet-base|   TF| 95.0| 18.0|   101|
+||    | BBA| __96.3__| __16.2__|    __68__|
+||BERT-base|   TF| 89.2| 20.0|   115|
+||    | BBA| __95.7__| __16.9__|    __67__|
+||LSTM|   TF| __98.2__| 13.6|    72|
+||    | BBA| __98.2__| __13.1__|    __54__|
+
 BERT-base (AG's News, Embedding)
 ```bash
 textattack attack --silent --shuffle --shuffle-seed 0 --random-seed 0 --recipe bayesattack-embedding --model bert-base-uncased-ag-news --num-examples 500 --sidx 0 --pkl-dir RESULTS --post-opt v3 --use-sod --dpp-type dpp_posterior --max-budget-key-type textfooler --max-patience 20
@@ -167,6 +122,20 @@ textattack attack --silent --shuffle --shuffle-seed 0 --random-seed 0 --recipe b
 ```
 
 #### HowNet
+
+
+|Dataset|Model|Method | ASR (\%)| MR (\%)| Qrs |
+|AG|BERT-base|  PSO| 67.2| 21.2| 65860|
+||    |BBA| __70.8__| __15.5__|  __5176__|
+||LSTM|  PSO| 71.0| 19.7| 44956|
+||    | BBA| __71.9__| __13.7__|  __3278__|
+|MR|XLNet-base|  PSO| __91.3__| 18.6|  4504|
+||    | BBA| __91.3__| __11.7__|   __321__|
+||BERT-base|  PSO| __90.9__| 17.3|  6299|
+||    | BBA| __90.9__| __12.4__|   __403__|
+||LSTM|  PSO| __94.4__| 15.3|  2030|
+||    | BBA| __94.4__| __11.2__|   __138__|
+
 BERT-base (AG's News, HowNet)
 ```bash
 textattack attack --silent --shuffle --shuffle-seed 0 --random-seed 0 --recipe bayesattack-hownet --model bert-base-uncased-ag-news --num-examples 500 --sidx 0 --pkl-dir RESULTS --post-opt v3 --use-sod --dpp-type dpp_posterior --max-budget-key-type pso --max-patience 100
