@@ -13,7 +13,7 @@ pip install spacy 추가.
 5. Install botorch: `pip install botorch`
 6. Install dppy: `pip install dppy`
 7. Install sklearn: `pip install sklearn`
-7. Download EC50 Dataset: `wget --load-cookies ~/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1Y3QQpWZ9_fwlXHQTJBNKnOtwVOvCZLib' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1Y3QQpWZ9_fwlXHQTJBNKnOtwVOvCZLib" -O clas_ec.zip && rm -rf ~/cookies.txt`
+7. Download EC50 Dataset: `wget --load-cookies ~/cookies.txt "https://docs.google.com/uc?export=download|confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download|id=1Y3QQpWZ9_fwlXHQTJBNKnOtwVOvCZLib' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')|id=1Y3QQpWZ9_fwlXHQTJBNKnOtwVOvCZLib" -O clas_ec.zip || rm -rf ~/cookies.txt`
 
 
 8. Unzip EC50 Dataset: `unzip clas_ec.zip`
@@ -45,6 +45,11 @@ python attack_codes/attack.py classification --method greedy --seed 0 --sidx 0 -
 ```
 
 # Our Method
+|||Level 0 |||Level 1 ||| Level 2||
+|Method	|ASR |MR	|Qrs |ASR |MR	|Qrs |ASR |MR |Qrs|
+|TF | 83.8 | 3.2 | 619 | 85.8 | 3.0 | 584 | 89.6 | 2.5 | 538 |
+|BBA | __99.8__ | __2.9__ | __285__ | __99.8__ | __2.3__ | __293__ | __100.0__ | __2.0__ | __231__|
+
 To reproduce results of our method in table 5, run following codes.
 ```bash
 python attack_codes/attack.py classification --method bayesian --seed 0 --sidx 0 --num_seqs 500 --working_folder datasets/clas_ec/clas_ec_ec50_level0 --block_size 20 --max_patience 50

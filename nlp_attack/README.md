@@ -18,14 +18,13 @@
 * --num-examples : the number of examples to process.
 * --sidx : start index of dataset.
 * --pkl-dir : directory to save budget information.
-* --search-type : include `post-opt` to do post optimization & include `sod` for sod dataset sampling.
+* --use-sod : use this option for sod dataset sampling.
+* --post-opt : use 'v3' to use the post optimization algorithm in our paper.
 * --dpp-type : `dpp_posterior` for batch update via DPP.
-* --max-budget-key-type : the name of target baseline to compare. this option set max query budget of our method same to target baseline.
+* --max-budget-key-type : the name of target baseline to compare. this option set max query budget of our method same to target baseline. one of ['pwws','textfooler','pso','lsh','bae'].
 * --max-loop : `5` for default setting. (the number of loops of BBA)
 * --fit-iter : `3` for default setting. (the number of update steps in GP parameter fitting)
 * --max-patience : query budget for post optimization.
-
-
 
 
 ### Baselines (PWWS, TextFooler, PSO)
@@ -124,7 +123,6 @@ textattack attack --silent --shuffle --shuffle-seed 0 --random-seed 0 --recipe b
 ```
 
 #### HowNet
-
 
 |Dataset|Model|Method | ASR (\%)| MR (\%)| Qrs |
 |---|---|---|---|---|---|
