@@ -89,12 +89,6 @@ python attack_codes/attack.py classification --method greedy --seed 0 --sidx 0 -
   </tr>
 </table>
 
-|   |<td colspan=3>level 0<td colspan=3>level 1<td colspan=3>level 2|
-|---|---|---|---|---|---|---|---|---|---|
-|Method	|ASR |MR	|Qrs |ASR |MR	|Qrs |ASR |MR |Qrs|
-|TF | 83.8 | 3.2 | 619 | 85.8 | 3.0 | 584 | 89.6 | 2.5 | 538 |
-|BBA | __99.8__ | __2.9__ | __285__ | __99.8__ | __2.3__ | __293__ | __100.0__ | __2.0__ | __231__|
-
 To reproduce results of our method in table 5, run following codes.
 ```bash
 python attack_codes/attack.py classification --method bayesian --seed 0 --sidx 0 --num_seqs 500 --working_folder datasets/clas_ec/clas_ec_ec50_level0 --block_size 20 --max_patience 50
