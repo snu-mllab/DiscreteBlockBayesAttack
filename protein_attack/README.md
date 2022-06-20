@@ -45,7 +45,50 @@ python attack_codes/attack.py classification --method greedy --seed 0 --sidx 0 -
 ```
 
 # Our Method
-|   |<td colspan=3>level 0|<td colspan=3>level 1|<td colspan=3>level 2|
+
+<table>
+  <tr>
+    <td colspan="3">level 0</td>
+    <td colspan="3">level 1</td>
+    <td colspan="3">level 2</td>
+  </tr>
+    <td> Method </td>
+    <td> ASR (%) </td>
+    <td> MR (%) </td>
+    <td> Qrs </td>
+    <td> ASR (%) </td>
+    <td> MR (%) </td>
+    <td> Qrs  </td>
+    <td> ASR (%) </td>
+    <td> MR (%) </td>
+    <td> Qrs </td>
+  <tr>
+    <td> TF </td>
+    <td> 83.8 </td>
+    <td> 3.2 </td>
+    <td> 619 </td>
+    <td> 85.8 </td>
+    <td> 3.0 </td>
+    <td> 584 </td>
+    <td> 89.6 </td>
+    <td> 2.5 </td>
+    <td> 538 </td>
+  </tr>
+<tr>
+    <td> BBA </td>
+    <td> <b>99.8</b> </td>
+    <td> <b>2.9</b> </td>
+    <td> <b>285</b> </td>
+    <td> <b>99.8</b> </td>
+    <td> <b>2.3</b> </td>
+    <td> <b>293</b> </td>
+    <td> <b>100.0</b> </td>
+    <td> <b>2.0</b> </td>
+    <td> <b>231</b> </td>
+  </tr>
+</table>
+
+|   |<td colspan=3>level 0<td colspan=3>level 1<td colspan=3>level 2|
 |---|---|---|---|---|---|---|---|---|---|
 |Method	|ASR |MR	|Qrs |ASR |MR	|Qrs |ASR |MR |Qrs|
 |TF | 83.8 | 3.2 | 619 | 85.8 | 3.0 | 584 | 89.6 | 2.5 | 538 |
