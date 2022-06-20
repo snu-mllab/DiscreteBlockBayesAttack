@@ -90,7 +90,6 @@ class BayesOpt:
             # Exploitation.
             num_candids = 10
             while stage_call < stage_iter:
-                #print(stage_call, stage_iter)
                 self.clean_memory_cache()
 
                 self.surrogate_model.fit_partial(self.hb, list(range(eff_len)), stage_init_ind, prev_indices=[0]) 

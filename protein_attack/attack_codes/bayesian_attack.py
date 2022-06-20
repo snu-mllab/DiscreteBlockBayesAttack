@@ -22,7 +22,7 @@ def get_nv(BBM, x_):
     return nv
 
 
-def bayesian_attack(x, y, syndict, BBM, dpp_type='dpp_posterior', block_size=40, max_loop=5, max_patience=20, post_opt='v3'):
+def bayesian_attack(x, y, syndict, BBM, dpp_type='dpp_posterior', block_size=40, max_loop=5, max_patience=20, post_opt='v3', fit_iter=3):
     '''
         x : size 1 x L tensor
         y : size 1 tensor
@@ -43,7 +43,7 @@ def bayesian_attack(x, y, syndict, BBM, dpp_type='dpp_posterior', block_size=40,
     else:
         query_budget = get_query_budget(x_, syndict, baseline='textfooler')
         BBM.set_query_budget(query_budget)
-        attacker = BlockBayesAttack(block_size=block_size, max_patience=max_patience, post_opt=post_opt, dpp_type=dpp_type, max_loop=max_loop, fit_iter=1)  
+        attacker = BlockBayesAttack(block_size=block_size, max_patience=max_patience, post_opt=post_opt, dpp_type=dpp_type, max_loop=max_loop, fit_iter=fit_iter)  
         
         attacker_input = torch.zeros(1, x_.numel())
         x_att, attack_logs = attacker.perform_search(attacker_input, n_vertices, BBM) 

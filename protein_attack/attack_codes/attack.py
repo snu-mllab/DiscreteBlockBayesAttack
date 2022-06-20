@@ -36,6 +36,7 @@ kwargs_defaults = {
 "method": "bayesian",
 "block_size": 40,
 "max_patience": 20,
+"fit_iter": 3,
 "eval": 0,
 "seed": 0,
 "sidx": 0,
@@ -100,7 +101,7 @@ def generic_model(clas=True, **kwargs):
                 if kwargs['method'] == 'greedy': 
                     xb_att, num_queries, modif_rate, succ, elapsed_time, attack_logs = greedy_attack(xb, yb, syndict, BBM)
                 elif kwargs['method'] == 'bayesian':
-                    xb_att, num_queries, modif_rate, succ, elapsed_time, attack_logs = bayesian_attack(xb, yb, syndict, BBM, block_size=kwargs['block_size'], max_patience=kwargs['max_patience'])
+                    xb_att, num_queries, modif_rate, succ, elapsed_time, attack_logs = bayesian_attack(xb, yb, syndict, BBM, block_size=kwargs['block_size'], max_patience=kwargs['max_patience'], fit_iter=kwargs['fit_iter'])
                 result = [xb_att.cpu().detach().numpy(), xb.cpu().detach().numpy(), yb.cpu().detach().numpy(), num_queries, modif_rate, succ, elapsed_time, attack_logs]
                 np.save(ADV_PATH, result, allow_pickle=True)
                 results.append(result)
@@ -121,8 +122,11 @@ def get_accuracy(dataset, BBM):
     with torch.no_grad():
         val_losses, ybs = [], []
         for xb,yb in dataset:
-            _, y_pred = BBM.get_pred(xb, yb)
-            score = BBM.get_score(xb,yb)
+            xb = xb.cpu().detach()
+            yb = yb.cpu().detach()
+            BBM.set_xy(xb,yb)
+            _, y_pred = BBM.get_pred(xb)
+            score = BBM.get_score(xb,require_transform=False)
             val_losses.append(y_pred)
             ybs.append(yb)
             if score > 0: score_ct += 1
@@ -149,7 +153,8 @@ def evaluate_adv(results, BBM):
                 assert succ == 0, "something wrong"
             nql.append(nq)
             succl.append(succ)
-            etl.append(elapsed_time)
+            etl.append(elapsed_time)            
+            
     asr = '{:.2f}'.format(sum(succl)/len(succl)*100)
     anq = '{:.1f}'.format(sum(nql)/len(nql))
     am = '{:.2f}'.format(sum(modifl)/len(modifl)*100)
@@ -158,7 +163,7 @@ def evaluate_adv(results, BBM):
 
 def get_adv_dir(working_folder, kwargs):
     if kwargs['method'] == 'bayesian':
-        adv_dir = working_folder/'BAYES{}_{}_{}{}'.format(kwargs['seed'],kwargs['block_size'],kwargs['max_patience'],kwargs['save_key'])
+        adv_dir = working_folder/'BAYES{}_{}_{}_{}{}'.format(kwargs['seed'],kwargs['block_size'],kwargs['max_patience'],kwargs['fit_iter'],kwargs['save_key'])
     elif kwargs['method'] == 'greedy':
         adv_dir = working_folder/'GREEDY{}{}'.format(kwargs['seed'],kwargs['save_key'])
     else:
@@ -215,10 +220,10 @@ class BlackBoxModel():
     def seq2input(self, seq):
         assert type(seq) == torch.Tensor, f"type(seq) is {type(seq)}"
         if len(seq.shape) == 1:
-            assert seq.shape[0] == self.len_seq, "indices length should be one of target indices length or seq length"
+            assert seq.shape[0] == self.len_seq, "indices length should be seq length"
             seq_ = seq
         elif len(seq.shape) == 2:
-            assert seq.shape[0] == 1 and seq.shape[1] == self.len_seq, "indices length should be one of target indices length or seq length"
+            assert seq.shape[0] == 1 and seq.shape[1] == self.len_seq, "indices length should be seq length"
             seq_ = seq.view(-1)
         cur_seq = self.x0
         modified_indices = [ct for ct, ind in enumerate(seq_) if ind > 0 and ct in self.target_indices]

@@ -62,7 +62,6 @@ def acquisition_maximization_with_indices(cur_seqs, opt_indices, batch_size, sta
     global_candidates_, global_eis_ = [], []
 
     t0 = time.time()
-    print("len cur_seqs:",len(cur_seqs))
     for cur_seq in cur_seqs:
         cur_indices = hb.reduce_seq(cur_seq).view(1,-1)
         if acq_with_opt_indices:
@@ -126,7 +125,6 @@ def acquisition_maximization_with_indices(cur_seqs, opt_indices, batch_size, sta
             best_indices = dpp_sample(Lmat, k=num, T=0)
         candidates = [hb.seq_by_indices(global_candidates[ind]) for ind in best_indices]
         t5 = time.time()
-    print(t1-t0,t2-t1,t3-t2,t4-t3,t5-t4)
     if len(candidates):
         return candidates
     else:

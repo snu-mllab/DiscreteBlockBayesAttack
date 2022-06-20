@@ -126,10 +126,10 @@ class BlockBayesAttack:
             stage_call = 0 
 
             if self.check_query_const(): break
-            stage_call, fX, X = self.exploration_ball_with_indices(center_seq=center_seq,n_samples=n_samples,ball_size=ex_ball_size,stage_call=stage_call, opt_indices=opt_indices, KEY=KEY, stage_init_ind=stage_init_ind)
+            stage_call, fX, X, fidx = self.exploration_ball_with_indices(center_seq=center_seq,n_samples=n_samples,ball_size=ex_ball_size,stage_call=stage_call, opt_indices=opt_indices, KEY=KEY, stage_init_ind=stage_init_ind)
 
             if stage_call == -1:
-                return X, [self.hb.time_list, self.hb.eval_X, self.hb.eval_Y, None]
+                return X, [self.hb.time_list, self.hb.eval_X, self.hb.eval_Y, fidx, self.hb.expl]
             if len(self.hb.eval_Y) == prev_qr:
                 if KEY[0] < self.max_loop: 
                     new = (KEY[0]+1, KEY[1])
@@ -151,7 +151,6 @@ class BlockBayesAttack:
                     history = self.hb.eval_X_reduced[inds]
                     uniq = torch.unique(history[:,loc_fix_indices],dim=0)
                     assert uniq.shape[0] == 1, f'{uniq.shape},{uniq[:,:5]}'
-                    #print(uniq[:,:5], fix_indices)
 
             parent_history.add(center_ind)
             parent_history = list(parent_history)
@@ -164,7 +163,6 @@ class BlockBayesAttack:
             num_candids = 10
             init_cent_indiced = deepcopy(self.hb.reduce_seq(center_seq))
 
-            print("before loop")
             count = 0
             prev_size = len(self.hb.eval_Y)
             iter_patience = 5
@@ -204,7 +202,7 @@ class BlockBayesAttack:
                     
                     final_init_ind = len(self.hb.eval_Y)-1
                     X = self.final_exploitation(self.hb.eval_X[-1], final_init_ind)
-                    return X, [self.hb.time_list, self.hb.eval_X, self.hb.eval_Y, final_init_ind]
+                    return X, [self.hb.time_list, self.hb.eval_X, self.hb.eval_Y, final_init_ind, self.hb.expl]
                 stage_call += len(self.hb.eval_Y) - prev_len
                 if stage_call >= stage_iter or self.check_query_const(): break
                 count += 1
@@ -223,17 +221,15 @@ class BlockBayesAttack:
                 self.BLOCK_QUEUE.append(new)
                 self.INDEX_DICT[new] = deepcopy(opt_indices[:next_len])
                 self.HISTORY_DICT[KEY].extend([ int(i) for i in range(stage_init_ind, len(self.hb.eval_X))])
-            print(f"best of KEY {KEY} : ", self.hb.best_in_recent_history(len(self.hb.eval_X)-stage_init_ind)[1][0][0].item())
             continue
         
         if self.BBM.query_budget == float('inf'):
             # Greedy step.
-            print("Greedy step")
             best_ind = self.hb.topk_in_history(1)[3][0]
             best_score = self.hb.eval_Y[best_ind][0].item()
             self.fit_surrogate_model_by_block_history()
             index_order = self.get_index_order_for_block_decomposition('beta')
-            for i in range(10):
+            for i in range(20):
                 if i>0:
                     orig_indiced = self.hb.reduce_seq(self.orig_X)
                     rand_indices = self.hb.nbd_sampler(orig_indiced, 1, self.eff_len, 1, fix_indices=[])
@@ -252,7 +248,6 @@ class BlockBayesAttack:
                     search_over = False
                 if not search_over:
                     best_X, best_score, is_nice = self.greedy_step(center_seq, index_order)
-                    print('best score in final greedy loop', best_score)
                     if is_nice:
                         return best_X, [self.hb.time_list, self.hb.eval_X, self.hb.eval_Y, None]
                 else:
@@ -280,7 +275,6 @@ class BlockBayesAttack:
         best_score = self.eval_and_add_datum(best_seq, return_scores=True)
 
         order = deepcopy(index_order)
-        print('initial_score ', best_score)
         while True:
             prev_best_seq = best_seq
             if is_shuffle:
@@ -309,7 +303,6 @@ class BlockBayesAttack:
 
     def update_queue(self, Q, I):
         if Q[0][0] == 0:
-            print("first stage.")
             if len(Q)==1:
                 return Q
             else:
@@ -331,9 +324,6 @@ class BlockBayesAttack:
             return self.ind_score(I[KEY],beta,KEY[0])
 
         Q_ = sorted(Q,key=f)
-        print(Q)
-        print('->')
-        print(Q_)
         return Q_
 
     def get_index_order_for_block_decomposition(self, rank_policy='straight'):
@@ -352,15 +342,23 @@ class BlockBayesAttack:
         prev_len = self.hb.eval_Y.shape[0]
         rand_candidates = self.hb.sample_ball_candidates_from_seq(center_seq, n_samples=n_samples, ball_size=ball_size, fix_indices=fix_indices)
 
-        if self.eval_and_add_data(rand_candidates):
-            self.HISTORY_DICT[KEY].extend([ int(i) for i in range(stage_init_ind, len(self.hb.eval_X))])
-            fX = self.hb.eval_X[-1]
-            best_candidate = self.hb.eval_X[-1]
-            return -1, fX, self.final_exploitation(best_candidate, len(self.hb.eval_Y)-1)
+        #if self.eval_and_add_data(rand_candidates):
+        #    self.HISTORY_DICT[KEY].extend([ int(i) for i in range(stage_init_ind, len(self.hb.eval_X))])
+        #    fX = self.hb.eval_X[-1]
+        #    best_candidate = self.hb.eval_X[-1]
+        #    return -1, fX, self.final_exploitation(best_candidate, len(self.hb.eval_Y)-1)
+
+        for rand_candidate in rand_candidates:
+            if self.eval_and_add_datum(rand_candidate):
+                self.HISTORY_DICT[KEY].extend([ int(i) for i in range(stage_init_ind, len(self.hb.eval_X))])
+                fX = self.hb.eval_X[-1]
+                best_candidate = self.hb.eval_X[-1]
+                fidx = len(self.hb.eval_Y)-1
+                return -1, fX, self.final_exploitation(best_candidate, fidx), fidx
 
         if self.check_query_const():
             stage_call += self.hb.eval_Y.shape[0] - prev_len
-            return stage_call,None, None
+            return stage_call, None, None, None
 
         # If any query were not evaluated, hardly sample non orig examples.
         if self.hb.eval_Y.shape[0] == prev_len:
@@ -371,9 +369,11 @@ class BlockBayesAttack:
             rand_candidate = self.hb.seq_by_indices(rand_indiced)
             if self.eval_and_add_datum(rand_candidate):
                 self.HISTORY_DICT[KEY].extend([ int(i) for i in range(stage_init_ind, len(self.hb.eval_X))])
-                return -1, self.final_exploitation(rand_candidate, len(self.hb.eval_Y)-1)
+                fX = self.hb.eval_X[-1]
+                fidx = len(self.hb.eval_Y)-1
+                return -1, fX, self.final_exploitation(rand_candidate, fidx), fidx
         stage_call += self.hb.eval_Y.shape[0] - prev_len
-        return stage_call, None, None
+        return stage_call, None, None, None
 
     def find_greedy_init_with_indices_v2(self, cand_indices, max_radius, num_candids, reference=None):
         # calculate acquisition
@@ -447,7 +447,6 @@ class BlockBayesAttack:
         return self.final_exploitation_v3(v2_seq, v2_ind, forced_inds)
 
     def final_exploitation_v2(self, seq, ind):
-        print("final exploitation")
         cur_seq = seq
         cur_ind = ind
         cur_score = self.hb.eval_Y[cur_ind].item()
@@ -455,7 +454,6 @@ class BlockBayesAttack:
         nonzero_indices = [ct for ct, ind in enumerate(cur_indices) if ind > 0]
 
         if len(nonzero_indices)==1:
-            print(0)
             return self.hb.eval_X[cur_ind].view(1,-1), cur_ind
 
         imps = []
@@ -498,7 +496,6 @@ class BlockBayesAttack:
     
 
     def final_exploitation_v3(self, seq, ind, forced_inds=[]):
-        print("final exploitation")
         cur_seq = seq
         best_ind = ind
         self.eff_len = self.hb.eff_len_seq
@@ -513,8 +510,12 @@ class BlockBayesAttack:
         _, sum_history = self.fit_surrogate_model_by_block_history(forced_inds)
         init_idx = len(self.hb.eval_Y)
 
+        
+        # del it.
+        setattr(self.hb,"expl", [])
         while True:
             self.clean_memory_cache()
+            self.hb.expl.append((self.hb._hamming(self.orig_X, cur_seq)/self.hb.len_seq, patience, self.BBM.num_queries))
             max_radius = self.hb._hamming(self.orig_X, cur_seq) - 1
             if prev_radius == max_radius:
                 if patience <= 0:
@@ -523,33 +524,26 @@ class BlockBayesAttack:
                 patience = max_patience
                 prev_radius = max_radius
                 nbd_size = 2
-            print("final", i, max_radius)
-            t0 = time.time()
+            # del it.
             if max_radius == 0:
                 return self.hb.eval_X[best_ind].view(1,-1)
             
             self.surrogate_model.fit_partial(self.hb, whole_indices, init_idx, sum_history)
             best_candidate = cur_seq
-            t1 = time.time()
 
             # best in ball seq
             bib_seq, bib_score, _ = self.hb.best_of_hamming_orig(distance=max_radius)
-            t2 = time.time()
 
             best_indiced = self.hb.reduce_seq(best_candidate)
             bib_indiced = self.hb.reduce_seq(bib_seq)  
             orig_indiced = self.hb.reduce_seq(self.orig_X)
             rand_indices = self.hb.subset_sampler(best_indiced, 300, nbd_size)
-            t3 = time.time()
 
             cand_indices = torch.cat([orig_indiced.view(1,-1), best_indiced.view(1,-1), bib_indiced.view(1,-1), rand_indices], dim=0)
             cand_indices = torch.unique(cand_indices.long(),dim=0).float()
             center_candidates = self.find_greedy_init_with_indices_v2(cand_indices, max_radius, num_candids=self.batch_size, reference=0.0)  
-            t4 = time.time()
             reference = self.hb.eval_Y[best_ind].item()
             best_candidates = acquisition_maximization_with_indices(center_candidates, opt_indices=opt_indices, batch_size=self.batch_size, stage=max_radius-1, hb=self.hb, surrogate_model=self.surrogate_model, reference=reference, dpp_type=self.dpp_type, acq_with_opt_indices=False)
-            t5 = time.time()
-            print(t1-t0, t2-t1, t3-t2, t4-t3, t5-t4)
             if best_candidates == None:
                 if max_radius + 1 == nbd_size:
                     break
@@ -577,7 +571,6 @@ class BlockBayesAttack:
             opt_indices = list(range(key*self.block_size,min((key+1)*self.block_size,len(self.hb.reduced_n_vertices))))
             num_samples = sum([self.hb.reduced_n_vertices[ind]-1 for ind in opt_indices]) 
             bhl[key] = self.subset_of_dataset(bhl[key],num_samples)
-            print(f"num samples in {key} : {len(bhl[key])}")
         sum_history = copy.deepcopy(forced_inds)
         for key, l in bhl.items():
             sum_history.extend(l)
