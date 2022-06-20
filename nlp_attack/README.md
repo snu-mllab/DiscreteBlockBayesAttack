@@ -3,8 +3,8 @@
 ## Setup
 1. If `gcc` do not exist in your system, please install build essential: `sudo apt-get install build-essential`
 2. Create conda environment: `conda create -n nlp_atk python=3.9.7` and `conda activate nlp_atk`
-conda install jsonnet -c conda-forge
-conda install pytorch==1.10.1 torchvision==0.11.2 torchaudio==0.10.1 cudatoolkit=11.3 -c pytorch -c conda-forge
+3. conda install jsonnet -c conda-forge
+4. conda install pytorch==1.10.1 torchvision==0.11.2 torchaudio==0.10.1 cudatoolkit=11.3 -c pytorch -c conda-forge
 3. Install textattack: `cd TextAttack;pip install -e '.[tensorflow]'`
 4. Install botorch: `pip install botorch`
 5. Install dppy: `pip install dppy`
