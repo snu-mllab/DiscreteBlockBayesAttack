@@ -21,7 +21,7 @@ pip install spacy 추가.
 
 ## Run
 
-# Arguments
+### Arguments
 * --method : The name of method. One of ['greedy', 'bayesian'].
 * --seed : Random seed.
 * --sidx : start index of test samples.
@@ -31,7 +31,7 @@ pip install spacy 추가.
 * --max_patience : max patience N_post.
 * --fit-iter : `3` for default setting. (the number of update steps in GP parameter fitting)
 
-# Baseline (TextFooler)
+### Baseline (TextFooler)
 To reproduce results of the baseline method in table 5, run following codes.
 ```bash
 python attack_codes/attack.py classification --method greedy --seed 0 --sidx 0 --num_seqs 500 --working_folder datasets/clas_ec/clas_ec_ec50_level0
@@ -45,7 +45,7 @@ python attack_codes/attack.py classification --method greedy --seed 0 --sidx 0 -
 python attack_codes/attack.py classification --method greedy --seed 0 --sidx 0 --num_seqs 500 --working_folder datasets/clas_ec/clas_ec_ec50_level2
 ```
 
-# Our Method
+### Our Method
 
 <table class="center">
   <tr>
