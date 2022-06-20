@@ -13,6 +13,7 @@ Below are environments that authors used.
 This repository requires GPU to run
 
 For the initial step, use the following command to install our git repository:
+
 ```git clone --recursive https://github.com/snu-mllab/DiscreteBlockBayesAttack.git```
 
 Our implemented code for NLP domain can be found in [nlp\_attack folder](nlp_attack)
