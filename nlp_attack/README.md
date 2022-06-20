@@ -164,3 +164,13 @@ textattack attack --silent --shuffle --shuffle-seed 0 --random-seed 0 --recipe b
 
 ### Reproduce other tables
 We will add the list of commands that reproduce other tables soon.
+
+## Citation
+```
+@inproceedings{leeICML22,
+title = {Query-Efficient and Scalable Black-Box Adversarial Attacks on Discrete Sequential Data via Bayesian Optimization},
+author = {Lee, Deokjae and Moon, Seungyong and Lee, Junhyeok and Song, Hyun Oh},
+booktitle = {International Conference on Machine Learning (ICML)},
+year = {2022}
+}
+```
