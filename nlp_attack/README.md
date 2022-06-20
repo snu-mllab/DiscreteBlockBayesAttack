@@ -90,6 +90,7 @@ textattack attack --silent --shuffle --shuffle-seed 0 --random-seed 0 --recipe b
 #### Embedding
 
 |Dataset|Model|Method | ASR (\%)| MR (\%)| Qrs | 
+|---|---|---|---|---|---|
 |AG|BERT-base|   TF| 84.7| 24.9|   346|
 ||    | BBA| __96.0__| __18.9__|   __154__|
 ||LSTM|   TF| 94.9| 17.3|   228|
@@ -126,6 +127,7 @@ textattack attack --silent --shuffle --shuffle-seed 0 --random-seed 0 --recipe b
 
 
 |Dataset|Model|Method | ASR (\%)| MR (\%)| Qrs |
+|---|---|---|---|---|---|
 |AG|BERT-base|  PSO| 67.2| 21.2| 65860|
 ||    |BBA| __70.8__| __15.5__|  __5176__|
 ||LSTM|  PSO| 71.0| 19.7| 44956|
