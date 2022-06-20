@@ -34,7 +34,7 @@ kwargs_defaults = {
 
 ############ For attack ##############
 "method": "bayesian",
-"block_size": 40,
+"block_size": 20,
 "max_patience": 20,
 "fit_iter": 3,
 "eval": 0,
