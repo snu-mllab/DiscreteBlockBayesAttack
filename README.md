@@ -13,7 +13,7 @@ Below are environments that authors used.
 This repository requires GPU to run
 
 
-Our implemented code for NLP domain can be found in [nlp\_attack folder](nlp_attack/README.md)
+Our implemented code for NLP domain can be found in [nlp\_attack folder](nlp_attack)
 
 
-Our implemented code for protein domain can be found in [protein\_attack folder](protein_attack/README.md)
+Our implemented code for protein domain can be found in [protein\_attack folder](protein_attack)
