@@ -29,6 +29,7 @@ pip install spacy 추가.
 * --working_folder : working folder. 
 * --block_size : the block size m.
 * --max_patience : max patience N_post.
+* --fit-iter : `3` for default setting. (the number of update steps in GP parameter fitting)
 
 # Baseline (TextFooler)
 To reproduce results of the baseline method in table 5, run following codes.
@@ -46,7 +47,8 @@ python attack_codes/attack.py classification --method greedy --seed 0 --sidx 0 -
 
 # Our Method
 
-<table class="center" style="text-align:center;">
+<table class="center">
+<table table style="text-align:center;">
   <tr>
     <td> </td>
     <td colspan="3">level 0</td>
