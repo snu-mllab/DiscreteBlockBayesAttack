@@ -109,18 +109,18 @@ Categories
 We provide commands to reproduce our results in table 1. The `max-patience` value used in our experiment can be found in table 7.
 
 #### WordNet 
-Dataset|Model|Method | ASR (\%)| MR (\%)| Qrs 
-|---|---|---|---|---|
-AG|BERT-base| PWWS| 57.1| 18.3|   367|
-|    | BBA| \textbf{77.4}| \textbf{17.8}|   \textbf{217}|
-|LSTM| PWWS| 78.3| 16.4|   336|
-|    | BBA| \textbf{83.2}| \textbf{15.4}|   \textbf{190}|
-MR|XLNet-base| PWWS| 83.9| \textbf{14.4}|   143|
-|    | BBA| \textbf{87.8}| \textbf{14.4}|    \textbf{77}|
-|BERT-base| PWWS| 82.0| 15.0|   143|
-|    | BBA| \textbf{88.3}| \textbf{14.6}|    \textbf{94}|
-|LSTM| PWWS| \textbf{94.2}| 13.3|   132|
-|    | BBA| \textbf{94.2}| \textbf{13.0}|    \textbf{67}|
+|Dataset|Model|Method | ASR (\%)| MR (\%)| Qrs |
+|---|---|---|---|---|---|
+|AG|BERT-base| PWWS| 57.1| 18.3|   367|
+||    | BBA| \textbf{77.4}| \textbf{17.8}|   \textbf{217}|
+||LSTM| PWWS| 78.3| 16.4|   336|
+||    | BBA| \textbf{83.2}| \textbf{15.4}|   \textbf{190}|
+|MR|XLNet-base| PWWS| 83.9| \textbf{14.4}|   143|
+||    | BBA| \textbf{87.8}| \textbf{14.4}|    \textbf{77}|
+||BERT-base| PWWS| 82.0| 15.0|   143|
+||    | BBA| \textbf{88.3}| \textbf{14.6}|    \textbf{94}|
+||LSTM| PWWS| \textbf{94.2}| 13.3|   132|
+||    | BBA| \textbf{94.2}| \textbf{13.0}|    \textbf{67}|
 BERT (AG's News, WordNet)
 ```bash
 textattack attack --silent --shuffle --shuffle-seed 0 --random-seed 0 --recipe bayesattack-wordnet --model bert-base-uncased-ag-news --num-examples 500 --sidx 0 --pkl-dir RESULTS --post-opt v3 --use-sod --dpp-type dpp_posterior --max-budget-key-type pwws --max-patience 50
