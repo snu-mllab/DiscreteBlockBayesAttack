@@ -63,6 +63,7 @@ We provide commands to reproduce our results in table 1. The `max-patience` valu
 ||    | BBA| __88.3__| __14.6__|    __94__|
 ||LSTM| PWWS| __94.2__| 13.3|   132|
 ||    | BBA| __94.2__| __13.0__|    __67__|
+
 BERT (AG's News, WordNet)
 ```bash
 textattack attack --silent --shuffle --shuffle-seed 0 --random-seed 0 --recipe bayesattack-wordnet --model bert-base-uncased-ag-news --num-examples 500 --sidx 0 --pkl-dir RESULTS --post-opt v3 --use-sod --dpp-type dpp_posterior --max-budget-key-type pwws --max-patience 50
