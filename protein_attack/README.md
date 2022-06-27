@@ -8,16 +8,16 @@
 1. Create conda environment: `conda create -n protein_atk python=3.9.7` and `conda activate protein_atk`
 2. Install pytorch: `conda install pytorch -c pytorch`
 3. Install fastai: `conda install -c fastai fastai=1.0.52`
-pip install spacy 추가.
-4. Install fire: `conda install fire -c conda-forge`
-5. Install botorch: `pip install botorch`
-6. Install dppy: `pip install dppy`
-7. Install sklearn: `pip install sklearn`
-7. Download EC50 Dataset: `wget --load-cookies ~/cookies.txt "https://docs.google.com/uc?export=download|confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download|id=1Y3QQpWZ9_fwlXHQTJBNKnOtwVOvCZLib' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')|id=1Y3QQpWZ9_fwlXHQTJBNKnOtwVOvCZLib" -O clas_ec.zip || rm -rf ~/cookies.txt`
+4. Install spacy: `pip install spacy`
+5. Install fire: `conda install fire -c conda-forge`
+6. Install botorch: `pip install botorch`
+7. Install dppy: `pip install dppy`
+8. Install sklearn: `pip install sklearn`
+9. Download EC50 Dataset: `wget --load-cookies ~/cookies.txt "https://docs.google.com/uc?export=download|confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download|id=1Y3QQpWZ9_fwlXHQTJBNKnOtwVOvCZLib' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')|id=1Y3QQpWZ9_fwlXHQTJBNKnOtwVOvCZLib" -O clas_ec.zip || rm -rf ~/cookies.txt`
 
 
-8. Unzip EC50 Dataset: `unzip clas_ec.zip`
-9. Move dataset into ```datasets``` directory : `mv clas_ec datasets`
+10. Unzip EC50 Dataset: `unzip clas_ec.zip`
+11. Move dataset into ```datasets``` directory : `mv clas_ec datasets`
 
 ## Run
 
