@@ -1,0 +1,29 @@
+BERT-base (MNLI, WordNet)
+```bash
+textattack attack --silent --shuffle --shuffle-seed 0 --random-seed 0 --recipe bayesattack-wordnet-pre --model bert-base-uncased-mnli --num-examples 500 --sidx 0 --pkl-dir RESULTS --post-opt v3 --use-sod --dpp-type dpp_posterior --max-budget-key-type pwws --max-patience 150
+```
+
+BERT-base (MNLI, Embedding)
+```bash
+textattack attack --silent --shuffle --shuffle-seed 0 --random-seed 0 --recipe bayesattack-embedding-pre --model bert-base-uncased-mnli --num-examples 500 --sidx 0 --pkl-dir RESULTS --post-opt v3 --use-sod --dpp-type dpp_posterior --max-budget-key-type textfooler --max-patience 50
+```
+
+BERT-base (MNLI, HowNet)
+```bash
+textattack attack --silent --shuffle --shuffle-seed 0 --random-seed 0 --recipe bayesattack-hownet-pre --model bert-base-uncased-mnli --num-examples 500 --sidx 0 --pkl-dir RESULTS --post-opt v3 --use-sod --dpp-type dpp_posterior --max-budget-key-type pso --max-patience 150
+```
+
+BERT-base (QNLI, WordNet)
+```bash
+textattack attack --silent --shuffle --shuffle-seed 0 --random-seed 0 --recipe bayesattack-wordnet-pre --model bert-base-uncased-qnli --num-examples 500 --sidx 0 --pkl-dir RESULTS --post-opt v3 --use-sod --dpp-type dpp_posterior --max-budget-key-type pwws --max-patience 150
+```
+
+BERT-base (QNLI, Embedding)
+```bash
+textattack attack --silent --shuffle --shuffle-seed 0 --random-seed 0 --recipe bayesattack-embedding-pre --model bert-base-uncased-qnli --num-examples 500 --sidx 0 --pkl-dir RESULTS --post-opt v3 --use-sod --dpp-type dpp_posterior --max-budget-key-type textfooler --max-patience 50
+```
+
+BERT-base (QNLI, HowNet)
+```bash
+textattack attack --silent --shuffle --shuffle-seed 0 --random-seed 0 --recipe bayesattack-hownet-pre --model bert-base-uncased-qnli --num-examples 500 --sidx 0 --pkl-dir RESULTS --post-opt v3 --use-sod --dpp-type dpp_posterior --max-budget-key-type pso --max-patience 150
+```
