@@ -163,7 +163,7 @@ textattack attack --silent --shuffle --shuffle-seed 0 --random-seed 0 --recipe b
 
 
 ### Reproduce other tables
-We will add the list of commands that reproduce other tables soon.
+We refer to commands in [exp_imdb.txt], [exp_yelp.txt], [exp_mnli.txt], and [exp_qnli.txt].
 
 ## Citation
 ```
