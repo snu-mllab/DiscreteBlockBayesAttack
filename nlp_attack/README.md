@@ -162,7 +162,7 @@ textattack attack --silent --shuffle --shuffle-seed 0 --random-seed 0 --recipe b
 
 
 
-### Reproduce other tables
+### Commands for Other Datasets
 We refer to commands in [exp_imdb.txt](exp_imdb.txt), [exp_yelp.txt](exp_yelp.txt), and [exp_nli.txt](exp_nli.txt).
 
 ## Citation
