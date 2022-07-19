@@ -163,7 +163,7 @@ textattack attack --silent --shuffle --shuffle-seed 0 --random-seed 0 --recipe b
 
 
 ### Reproduce other tables
-We refer to commands in [exp_imdb.txt](exp_imdb.txt), [exp_yelp.txt](exp_yelp.txt), [exp_mnli.txt](exp_mnli.txt), and [exp_qnli.txt](exp_qnli.txt).
+We refer to commands in [exp_imdb.txt](exp_imdb.txt), [exp_yelp.txt](exp_yelp.txt), and [exp_nli.txt](exp_nli.txt).
 
 ## Citation
 ```
