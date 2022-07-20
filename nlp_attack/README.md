@@ -6,7 +6,7 @@
 3. Install jsonnet: `conda install jsonnet -c conda-forge`
 4. Install pytorch: `conda install pytorch==1.10.1 torchvision==0.11.2 torchaudio==0.10.1 cudatoolkit=11.3 -c pytorch -c conda-forge`
 5. Install textattack: `cd TextAttack;pip install -e '.[tensorflow]'`
-6. Install botorch: `pip install botorch`
+6. Install botorch: `pip install botorch==0.6.4`
 7. Install dppy: `pip install dppy`
 8. Install allennlp: `pip install allennlp`
 9. Install allennlp-models: `pip install allennlp-models`
