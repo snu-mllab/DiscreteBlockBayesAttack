@@ -3,13 +3,13 @@
 ## Setup
 1. If `gcc` do not exist in your system, please install build essential: `sudo apt-get install build-essential`
 2. Create conda environment: `conda create -n nlp_atk python=3.9.7` and `conda activate nlp_atk`
-3. Install jsonnet: `conda install jsonnet -c conda-forge`
+3. Install jsonnet: `conda install jsonnet==0.17.0 -c conda-forge`
 4. Install pytorch: `conda install pytorch==1.10.1 torchvision==0.11.2 torchaudio==0.10.1 cudatoolkit=11.3 -c pytorch -c conda-forge`
 5. Install textattack: `cd TextAttack;pip install -e '.[tensorflow]'`
-6. Install botorch: `pip install botorch`
-7. Install dppy: `pip install dppy`
-8. Install allennlp: `pip install allennlp`
-9. Install allennlp-models: `pip install allennlp-models`
+6. Install botorch: `pip install botorch==0.6.4`
+7. Install dppy: `pip install dppy==0.3.2`
+8. Install allennlp: `pip install allennlp==2.9.3`
+9. Install allennlp-models: `pip install allennlp-models==2.9.3`
 10. `cd ..` (go to `nlp_attack` directory)
 11. `python download.py`
 ## Run
