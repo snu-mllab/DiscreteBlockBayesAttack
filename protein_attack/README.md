@@ -10,8 +10,8 @@
 3. Install fastai: `conda install -c fastai fastai=1.0.52`
 4. Install spacy: `pip install spacy`
 5. Install fire: `conda install fire -c conda-forge`
-6. Install botorch: `pip install botorch`
-7. Install dppy: `pip install dppy`
+6. Install botorch: `pip install botorch==0.6.4`
+7. Install dppy: `pip install dppy==0.3.2`
 8. Install sklearn: `pip install sklearn`
 9. Download EC50 Dataset: `wget --load-cookies ~/cookies.txt "https://docs.google.com/uc?export=download|confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download|id=1Y3QQpWZ9_fwlXHQTJBNKnOtwVOvCZLib' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')|id=1Y3QQpWZ9_fwlXHQTJBNKnOtwVOvCZLib" -O clas_ec.zip || rm -rf ~/cookies.txt`
 
