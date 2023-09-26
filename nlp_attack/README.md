@@ -3,8 +3,8 @@
 ## Setup
 1. If `gcc` do not exist in your system, please install build essential: `sudo apt-get install build-essential`
 2. Create conda environment: `conda create -n nlp_atk python=3.9.7` and `conda activate nlp_atk`
-3. Install textattack: `cd TextAttack;pip install -e '.[tensorflow] --extra-index-url https://download.pytorch.org/whl/cu113'`
-4. Download omw-1.4: cd ..;python download.py`
+3. Install textattack: `cd TextAttack;pip install -e '.[tensorflow]' --extra-index-url https://download.pytorch.org/whl/cu113`
+4. Download omw-1.4: `cd ..;python download.py`
 ## Run
 
 ### Arguments
